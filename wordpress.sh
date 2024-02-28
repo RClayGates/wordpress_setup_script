@@ -138,6 +138,7 @@ service_check() {
         echo -e "\t$1 is active"
     else
         echo -e "\t$1 is inactive"
+    fi
 }
 
 # TODO: make a better condition statement
