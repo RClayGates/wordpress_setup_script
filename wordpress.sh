@@ -102,8 +102,7 @@ main() {
     service_check apache2
     service_check mysql
     mariadb_setup
-    # TODO: the following cmd hasn't been automated
-    mysql_secure_installation
+    mysql_sec_install
     wordpress_setup
     apache_config
     service_check apache2
@@ -112,12 +111,12 @@ main() {
 }
 
 standard_update() {
-    apt update && echo 'y' | apt upgrade
+    apt update && apt -y upgrade
 }
 
 # TODO: figure out how to insert multiple responses better than echo 'y'
 install_packages() {
-    echo 'y' | apt install \
+    apt -y install \
     apache2 \
     mariadb-server \
     libapache2-mod-php \
@@ -181,9 +180,21 @@ mariadb_setup() {
 }
 
 # TODO: figure out how to insert multiple responses better than echo -e 'y'
-# mysql_sec_install() {
-#
-# }
+mysql_sec_install() {
+    echo -e "\n\nEstablishing MariaDB Secure Configuration"
+    echo -e "---------------------------------------------"
+    echo -e "This script assumes that this is first time setup"
+    echo 
+    echo "Please enter a new MariaDB root password"
+    read root_pass
+    mariadb -e "UPDATE mysql.user SET Password=PASSWORD('$root_pass') WHERE User='root';
+                DELETE FROM mysql.user WHERE User='';
+                DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+                DROP DATABASE test;
+                DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'
+                FLUSH PRIVILEGES;"
+    echo "Basic Secure Configuration has been established"
+}
 
 wordpress_setup() {
     echo -e "\n\nStarting Wordpress setup"
@@ -206,7 +217,7 @@ wordpress_setup() {
 
 apache_config() {
     echo -e "\n\nStarting Apache2 setup"
-    echo -e "----------------------------"
+    echo -e "--------------------------"
     if [ -f /etc/apache2/sites-available/wordpress.conf ];then
         echo -e "\t/etc/apache2/sites-available/wordpress.conf is already present"
     else    
