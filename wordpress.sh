@@ -155,7 +155,7 @@ mariadb_setup() {
         read sql_local
         echo -e "\tDo you wish to enable remote access? [y/N]"
         read answer
-        if [[ $answer == 'y']]||[[ $answer == 'Y']];then
+        if [[ $answer == 'y' ]] || [[ $answer == 'Y' ]];then
             echo -e "\tEnter host ip/FQDN for wp_remote user"
             read remote_ip
             echo -e "\tEnter password for wp_remote user"
@@ -163,7 +163,7 @@ mariadb_setup() {
         fi
         mariadb -e  "CREATE DATABASE $(hostname)_db DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
                     GRANT ALL PRIVILEGES ON $(hostname)_db.* TO wp_local@localhost IDENTIFIED BY '$sql_local';"
-        if [[ $answer == 'y']]||[[ $answer == 'Y']];then
+        if [[ $answer == 'y' ]] || [[ $answer == 'Y' ]];then
             mariadb -e  "GRANT ALL PRIVILEGES ON $(hostname)_db.* TO wp_remote@$remote_ip IDENTIFIED BY '$sql_remote';"
         fi
         mariadb -e  "SHOW DATABASES;
@@ -171,7 +171,7 @@ mariadb_setup() {
                     FLUSH PRIVILEGES;"
         echo -e "\tCreated $(hostname)_db"
         echo -e "\tCreated 'wp_local@localhost' database custodian"
-        if [[ $answer == 'y']]||[[ $answer == 'Y']];then
+        if [[ $answer == 'y' ]] || [[ $answer == 'Y' ]];then
             echo -e "\tCreated 'wp_remote@$remote_ip' database custodian"
             echo -e "\tConfiguring Bind-Address Variable"
             sed -i 's/127.0.0.1/$remote_ip' /etc/mysql/mariadb.conf.d/50-server.cnf
@@ -208,7 +208,7 @@ wordpress_setup() {
         wget https://wordpress.org/latest.tar.gz
         echo -e "\tDecompressing tar.gz"
         tar -xvzf latest.tar.gz
-        mv wordpress/ /var/www/html/wordpress/
+        mv wordpress/ /var/www/wordpress/
         chown -R www-data:www-data /var/www/wordpress
         echo -e "\tWordpress files can be found at /var/www/wordpress"
     fi
